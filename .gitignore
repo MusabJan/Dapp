@@ -1,0 +1,28 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Hardhat
+cache/
+artifacts/
+typechain-types/
+
+# Node
+node_modules/
+frontend/node_modules/
+
+# Build
+frontend/build/
+
+# Deployment config (auto-generated)
+frontend/src/config/deployment.json
+frontend/src/config/AgriChain.abi.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*

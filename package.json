@@ -1,0 +1,26 @@
+{
+  "name": "agrichain",
+  "version": "1.0.0",
+  "description": "Decentralized Agriculture DApp — Ethereum smart contract + React frontend",
+  "scripts": {
+    "compile":      "npx hardhat compile",
+    "test":         "npx hardhat test",
+    "test:gas":     "REPORT_GAS=true npx hardhat test",
+    "node":         "npx hardhat node",
+    "deploy:local": "npx hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia":"npx hardhat run scripts/deploy.js --network sepolia",
+    "deploy:mainnet":"npx hardhat run scripts/deploy.js --network mainnet",
+    "frontend":     "cd frontend && npm start",
+    "build":        "cd frontend && npm run build",
+    "lint":         "npx solhint 'contracts/**/*.sol'"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat":                          "^2.22.0",
+    "dotenv":                           "^16.4.5",
+    "solhint":                          "^5.0.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  }
+}
