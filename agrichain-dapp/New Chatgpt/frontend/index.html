@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Agriculture DApp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1>🌾 Agriculture DApp (Simple Demo)</h1>
+
+    <!-- LIST CROP SECTION -->
+    <div>
+        <h3>🌱 List Crop</h3>
+
+        <input id="name" placeholder="Crop Name">
+        <input id="farmer" placeholder="Farmer Name">
+        <input id="price" placeholder="Price (ETH / Wei)">
+
+        <button onclick="listCrop()">List Crop</button>
+    </div>
+
+    <hr>
+
+    <!-- BUY CROP SECTION -->
+    <div>
+        <h3>💰 Buy Crop</h3>
+
+        <input id="cropId" placeholder="Crop ID">
+        <input id="buyer" placeholder="Buyer Name">
+
+        <button onclick="buyCrop()">Buy Crop</button>
+    </div>
+
+    <hr>
+
+    <!-- AI AGENT PANEL -->
+    <div>
+        <h3>🤖 AI Agent Panel</h3>
+
+        <div id="agentBox"
+            style="background:black;color:lime;padding:15px;height:180px;overflow:auto;border-radius:10px;">
+            Waiting for actions...
+        </div>
+    </div>
+
+    <!-- JS FILES (IMPORTANT ORDER) -->
+    <script src="app.js"></script>
+    <script src="agent.js"></script>
+
+</body>
+
+</html>

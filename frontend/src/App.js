@@ -4,6 +4,8 @@ import toast, { Toaster } from "react-hot-toast";
 import ABI from "./config/AgriChain.abi.json";
 import deployment from "./config/deployment.json";
 import "./App.css";
+import CropAdvisor from "./CropAdvisor";
+
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
@@ -250,7 +252,7 @@ export default function App() {
 
         {/* REGISTER */}
         {tab === "register" && (
-          <div>
+          <div><CropAdvisor />
             <h2 className="section-title">Register New Crop Batch</h2>
             <div className="card">
               <div className="form-grid-2">
@@ -373,3 +375,5 @@ export default function App() {
     </div>
   );
 }
+
+import CropAdvisor from "./CropAdvisor";
