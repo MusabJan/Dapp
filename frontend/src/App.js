@@ -6,15 +6,10 @@ import deployment from "./config/deployment.json";
 import "./App.css";
 import CropAdvisor from "./CropAdvisor";
 
-
-// ─── Constants ───────────────────────────────────────────────────────────────
-
 const CONTRACT_ADDRESS = deployment.contractAddress;
 const CERTIFICATIONS   = ["Standard", "Organic", "Non-GMO", "Fair Trade"];
 const STATUS_LABELS    = ["Registered", "Listed", "Sold", "In Transit", "Delivered"];
 const STATUS_COLORS    = ["#888", "#3B6D11", "#854F0B", "#185FA5", "#0F6E56"];
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const shortAddr = (addr) => `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 const weiToEth  = (wei)  => parseFloat(ethers.formatEther(wei)).toFixed(4);
@@ -22,8 +17,6 @@ const weiToEth  = (wei)  => parseFloat(ethers.formatEther(wei)).toFixed(4);
 function getContract(signerOrProvider) {
   return new ethers.Contract(CONTRACT_ADDRESS, ABI, signerOrProvider);
 }
-
-// ─── App ─────────────────────────────────────────────────────────────────────
 
 export default function App() {
   const [provider,   setProvider]   = useState(null);
@@ -36,16 +29,12 @@ export default function App() {
   const [loading,    setLoading]    = useState(false);
   const [stats,      setStats]      = useState({ total: 0, volume: "0" });
 
-  // ── Form state
   const [form, setForm] = useState({
     name: "", cropType: "Grain", quantity: "", pricePerKg: "",
     harvestDate: "", location: "", ipfsHash: "", cert: 0,
   });
   const [trackId,   setTrackId]   = useState("");
   const [shipLog,   setShipLog]   = useState([]);
-  const [buyQty,    setBuyQty]    = useState({});
-
-  // ─── Wallet Connection ───────────────────────────────────────────────────
 
   const connectWallet = useCallback(async () => {
     if (!window.ethereum) {
@@ -58,16 +47,13 @@ export default function App() {
       const sign = await prov.getSigner();
       const addr = await sign.getAddress();
       const net  = await prov.getNetwork();
-
       setProvider(prov);
       setSigner(sign);
       setAccount(addr);
       setNetwork(net.name);
-
-      const contract  = getContract(sign);
-      const farmer    = await contract.verifiedFarmers(addr);
+      const contract = getContract(sign);
+      const farmer   = await contract.verifiedFarmers(addr);
       setIsFarmer(farmer);
-
       toast.success(`Connected: ${shortAddr(addr)}`);
       loadCrops(prov);
     } catch (e) {
@@ -75,14 +61,11 @@ export default function App() {
     }
   }, []);
 
-  // ─── Load Crops ──────────────────────────────────────────────────────────
-
   const loadCrops = useCallback(async (prov) => {
     try {
       const contract = getContract(prov || provider);
       const total    = await contract.totalCrops();
       const statVol  = await contract.totalVolume();
-
       const loaded = [];
       for (let i = 1; i <= Number(total); i++) {
         const c = await contract.crops(i);
@@ -99,18 +82,15 @@ export default function App() {
     if (provider) loadCrops(provider);
   }, [provider, loadCrops]);
 
-  // ─── Register Crop ───────────────────────────────────────────────────────
-
   const registerCrop = async () => {
     if (!signer) { toast.error("Connect wallet first"); return; }
     if (!isFarmer) { toast.error("Your address is not a verified farmer"); return; }
     setLoading(true);
     try {
-      const contract    = getContract(signer);
-      const harvestTs   = Math.floor(new Date(form.harvestDate).getTime() / 1000);
-      const priceWei    = ethers.parseEther(form.pricePerKg || "0");
+      const contract      = getContract(signer);
+      const harvestTs     = Math.floor(new Date(form.harvestDate).getTime() / 1000);
+      const priceWei      = ethers.parseEther(form.pricePerKg || "0");
       const quantityGrams = parseInt(form.quantity) * 1000;
-
       const tx = await contract.registerCrop(
         form.name, form.cropType, quantityGrams,
         priceWei, harvestTs, form.location,
@@ -126,8 +106,6 @@ export default function App() {
     }
     setLoading(false);
   };
-
-  // ─── Purchase Crop ───────────────────────────────────────────────────────
 
   const purchaseCrop = async (cropId) => {
     if (!signer) { toast.error("Connect wallet first"); return; }
@@ -146,8 +124,6 @@ export default function App() {
     setLoading(false);
   };
 
-  // ─── Track Supply Chain ──────────────────────────────────────────────────
-
   const trackShipment = async () => {
     if (!provider) { toast.error("Connect wallet first"); return; }
     try {
@@ -160,20 +136,18 @@ export default function App() {
     }
   };
 
-  // ─── UI Helpers ──────────────────────────────────────────────────────────
-
   const TABS = [
-    { id: "dashboard", label: "Dashboard" },
-    { id: "register",  label: "Register Crop" },
-    { id: "market",    label: "Marketplace"   },
-    { id: "supply",    label: "Supply Chain"  },
+    { id: "dashboard", label: "Dashboard"    },
+    { id: "register",  label: "Register Crop"},
+    { id: "market",    label: "Marketplace"  },
+    { id: "supply",    label: "Supply Chain" },
+    { id: "advisor",   label: "Crop Advisor" },
   ];
 
   return (
     <div className="app">
       <Toaster position="bottom-right" />
 
-      {/* Header */}
       <header className="header">
         <div className="logo">
           <span className="logo-icon">🌾</span>
@@ -192,7 +166,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Nav */}
       <nav className="nav">
         {TABS.map(t => (
           <button
@@ -212,10 +185,10 @@ export default function App() {
           <div>
             <div className="stats-grid">
               {[
-                { label: "Total Crops",    value: stats.total,           unit: "on-chain" },
-                { label: "Volume Traded",  value: `${stats.volume} ETH`, unit: "cumulative" },
-                { label: "Network",        value: network || "—",        unit: "connected to" },
-                { label: "Your Role",      value: isFarmer ? "Farmer" : "Buyer", unit: "wallet role" },
+                { label: "Total Crops",   value: stats.total,            unit: "on-chain"    },
+                { label: "Volume Traded", value: `${stats.volume} ETH`,  unit: "cumulative"  },
+                { label: "Network",       value: network || "—",          unit: "connected to"},
+                { label: "Your Role",     value: isFarmer ? "Farmer" : "Buyer", unit: "wallet role" },
               ].map((s, i) => (
                 <div key={i} className="stat-card">
                   <div className="stat-label">{s.label}</div>
@@ -224,7 +197,6 @@ export default function App() {
                 </div>
               ))}
             </div>
-
             <h2 className="section-title">Recent Crop Listings</h2>
             {crops.length === 0
               ? <p className="muted">No crops registered yet. Connect your wallet to load data.</p>
@@ -252,7 +224,7 @@ export default function App() {
 
         {/* REGISTER */}
         {tab === "register" && (
-          <div><CropAdvisor />
+          <div>
             <h2 className="section-title">Register New Crop Batch</h2>
             <div className="card">
               <div className="form-grid-2">
@@ -350,7 +322,6 @@ export default function App() {
                 <button className="btn-primary" onClick={trackShipment}>Track</button>
               </div>
             </div>
-
             {shipLog.length > 0 && (
               <div className="card" style={{marginTop:16}}>
                 <h3 className="section-title">Supply Chain Log — Batch #{trackId}</h3>
@@ -371,9 +342,15 @@ export default function App() {
           </div>
         )}
 
+        {/* CROP ADVISOR */}
+        {tab === "advisor" && (
+          <div>
+            <h2 className="section-title">Smart Crop Advisor 🌾</h2>
+            <CropAdvisor />
+          </div>
+        )}
+
       </main>
     </div>
   );
 }
-
-
