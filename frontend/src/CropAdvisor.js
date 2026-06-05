@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 const SYSTEM = `You are an expert agricultural advisor for Pakistani farmers. You speak in a friendly Hinglish (Hindi + Urdu + English mix) tone. Keep answers concise, practical, and actionable. Focus on crops relevant to Pakistan: wheat (gehun), rice (chawal), cotton (kapas), sugarcane (ganna), maize (makkai), vegetables. Mention specific Pakistani regions (Punjab, Sindh, KPK, Balochistan) when relevant. Use bullet points where helpful. Always end with one actionable tip they can do today.`;
 
+const API_KEY = 'sk-ant-api03-C0fylyjqIMWNCwoxk0OqzUwb6IK7sdvLvRMTSfv3lfowJRXDZkC1TOtymmt_VgetZXhRo9Yhp7eV24rrv6tyVA-L96_NAAA';
+
 export default function CropAdvisor() {
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Assalamu Alaikum! Main tumhara Smart Crop Advisor hun. Apni fasal ke baare mein kuch bhi poocho!' }
@@ -28,7 +30,9 @@ export default function CropAdvisor() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'anthropic-dangerous-direct-browser-access': 'true'
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01'
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
@@ -94,7 +98,7 @@ export default function CropAdvisor() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !loading && sendMessage()}
-          placeholder="Apna sawal likho — jaise: chawal ke liye pani kitna chahiye?"
+          placeholder="Apna sawal likho..."
           disabled={loading}
           style={{ flex: 1, padding: '10px 14px', borderRadius: 8, border: '1px solid #ddd', fontSize: 14 }}
         />
