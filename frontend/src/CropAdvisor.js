@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const SYSTEM = `You are an expert agricultural advisor for Pakistani farmers. You speak in a friendly Hinglish (Hindi + Urdu + English mix) tone. Keep answers concise, practical, and actionable. Focus on crops relevant to Pakistan: wheat (gehun), rice (chawal), cotton (kapas), sugarcane (ganna), maize (makkai), vegetables. Mention specific Pakistani regions (Punjab, Sindh, KPK, Balochistan) when relevant. Use bullet points where helpful. Always end with one actionable tip they can do today.`;
 
-const API_KEY = 'sk-ant-api03-C0fylyjqIMWNCwoxk0OqzUwb6IK7sdvLvRMTSfv3lfowJRXDZkC1TOtymmt_VgetZXhRo9Yhp7eV24rrv6tyVA-L96_NAAA';
+const API_KEY = 'YOUR_API_KEY_HERE';
 
 export default function CropAdvisor() {
   const [messages, setMessages] = useState([

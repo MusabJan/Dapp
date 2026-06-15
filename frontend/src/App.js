@@ -52,8 +52,9 @@ export default function App() {
       setAccount(addr);
       setNetwork(net.name);
       const contract = getContract(sign);
-      const farmer   = await contract.verifiedFarmers(addr);
-      setIsFarmer(farmer);
+      let farmer = false;
+try { farmer = await contract.verifiedFarmers(addr); } catch(e) { farmer = false; }
+setIsFarmer(farmer);
       toast.success(`Connected: ${shortAddr(addr)}`);
       loadCrops(prov);
     } catch (e) {
